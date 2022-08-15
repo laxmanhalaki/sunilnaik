@@ -79,7 +79,7 @@ useEffect(()=>{
         <h1 className="heading"><span>our</span> videos </h1>
         <div className='filt'>
 
-        <select name="filter" id="filter" onClick={(e)=>{filtt(e)}}>
+        <select name="filter" id="filter" onChange={(e)=>{filtt(e)}}>
         <option value="all" >--Please choose type of video you want--</option>
         {
            data.map((value,i)=>{
