@@ -2,8 +2,11 @@ import React, { useEffect, useState } from 'react'
 
 const Ourvideos = () => {
   const [data,setData]=useState([])
-  const database=[];
-  var [datasource,setDatasource]=useState([])
+  var database=[];
+  
+  const [datasource,setDatasource]=useState([])
+const [filterdata,setFilterdata]=useState([])
+  
   const api_key = "AIzaSyD3jUEpMAGqbJQh72nViL-82KwAWjOs3m8";
 
 
@@ -16,13 +19,19 @@ async function video(){
       key: api_key,
       channelId:channel,
       part:['snippet','contentDetails'],
-       maxResults: 30,
+       maxResults: 100,
        regionCode: 'IN'
 
   }))
   .then( res => res.json())
   .then( (dat)=>{
-    setData(dat.items)
+    console.log(dat)
+    dat.items.map((it)=>{
+list(it.id,it.snippet.title)
+    })
+    setData(dat.items);
+    setDatasource(database);
+    setFilterdata(database);
 
 }
 
@@ -55,10 +64,14 @@ const list=(playlist,title)=>{
 
 }
 const filtt=(e)=>{
- 
-    setDatasource(database.filter((v)=>{
-      return e.target.value===v.title;
-    }))
+ console.log(e.target.value)
+ console.log(database)
+ let filtereddata=database.filter((v)=>{
+  console.log(v)
+  return e.target.value===v.title;
+})
+    
+    setDatasource(filtereddata)
    
   }
 
@@ -71,7 +84,7 @@ useEffect(()=>{
   video()
 
 },[])
-
+console.log(datasource)
 
   return (
     <div>
@@ -83,10 +96,9 @@ useEffect(()=>{
         <option value="all" >--Please choose type of video you want--</option>
         {
            data.map((value,i)=>{
-            let playlist=value.id;
-          
+            
             let title=value.snippet.title
-            list(playlist,title)
+           
             return(
               <option value={title} id={i}>{title}</option>
             )
@@ -98,7 +110,7 @@ useEffect(()=>{
           <div className='container'>
 
         {
-          datasource.map((val,i)=>{
+          filterdata.map((val,i)=>{
             return(
               <div className="box" id={i}>
           <iframe  src={val.src} title={val.title}  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen/>
